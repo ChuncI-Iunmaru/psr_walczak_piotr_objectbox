@@ -119,6 +119,43 @@ public class AppMain {
         box.put(match);
     }
 
+    public static void calculateTeamStats(Box<Match> box) {
+        System.out.println("Przetwarzanie danych");
+        System.out.println("Podaj nazwę drużyny: ");
+        String team = ConsoleUtils.getText(1);
+        //Pobierz mecze gdzie drużyna jest pierwszą i firstScore
+        List<Match> firstList = box.query().equal(Match_.firstTeam, team).build().find();
+        //To samo gdzie jest drugą
+        List<Match> secondList = box.query().equal(Match_.secondTeam, team).build().find();
+        if (firstList.isEmpty() && secondList.isEmpty()) {
+            System.out.println("Drużyna nie rozegrała żadnych meczy w lidze!");
+            return;
+        }
+        //Oblicz sumę meczy, goli, min i max goli w meczu
+        double sumGoals = 0;
+        int minGoals, maxGoals;
+        if (!firstList.isEmpty()) {
+            minGoals=maxGoals=firstList.get(0).getFirstScore();
+        } else minGoals=maxGoals=secondList.get(0).getFirstScore();
+        int matches = firstList.size() + secondList.size();
+        for (Match m: firstList) {
+            sumGoals+=m.getFirstScore();
+            if (m.getFirstScore() < minGoals) minGoals = m.getFirstScore();
+            else if (m.getFirstScore() > maxGoals) maxGoals = m.getFirstScore();
+        }
+        for (Match m: secondList) {
+            sumGoals+=m.getSecondScore();
+            if (m.getSecondScore() < minGoals) minGoals = m.getSecondScore();
+            else if (m.getSecondScore() > maxGoals) maxGoals = m.getSecondScore();
+        }
+        System.out.println("Drużyna "+team+" rozegrała "+matches+" meczy w lidze.");
+        System.out.println("Razem goli: "+sumGoals);
+        System.out.println("Najmniej goli w meczu: "+minGoals);
+        System.out.println("Najwięcej goli w meczu: "+maxGoals);
+        if (sumGoals != 0) System.out.println("średnio goli w meczu: "+ sumGoals/matches);
+
+    }
+
     public static void main(String[] args) {
         BoxStore store = MyObjectBox.builder().name("objectbox-match-db").build();
         Box<Match> box = store.boxFor(Match.class);
@@ -143,6 +180,9 @@ public class AppMain {
                     break;
                 case 'p':
                     getByQuery(box);
+                    break;
+                case 'o':
+                    calculateTeamStats(box);
                     break;
                 case 'z':
                     store.close();
