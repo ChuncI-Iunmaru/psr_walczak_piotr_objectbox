@@ -60,15 +60,30 @@ public class ConsoleUtils {
         return tmp;
     }
 
+    static long getId() {
+        long num = -1;
+        while (num <= 0) {
+            try {
+                num = scanner.nextLong();
+                scanner.nextLine();
+                if (num <= 0) System.out.println("Podaj prawidłową wartość > 0");
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Podaj prawidłową wartość!");
+            }
+        }
+        return num;
+    }
+
     static int getNumber(int setValue, int minValue, int maxValue) {
         if (setValue != -1) System.out.println("Obecna wartość: " + setValue + ". Wpisz '-1' by nie zmieniać.");
-        int num = minValue-1;
+        int num = minValue - 1;
         while (num < minValue || (maxValue != -1 && num > maxValue)) {
             try {
                 num = scanner.nextInt();
                 scanner.nextLine();
                 if (setValue != -1 && num == -1) return setValue;
-                if (maxValue == -1 && num < minValue) System.out.println("Podaj prawidłową wartość >="+minValue);
+                if (maxValue == -1 && num < minValue) System.out.println("Podaj prawidłową wartość >=" + minValue);
                 else if (maxValue != -1 && (num < minValue || num > maxValue))
                     System.out.println("Podaj prawidłową wartość z zakresu " + minValue + "-" + maxValue);
             } catch (InputMismatchException e) {
@@ -80,7 +95,7 @@ public class ConsoleUtils {
     }
 
     static int getNumber(int minValue, int maxValue) {
-        return getNumber(-1, minValue,  maxValue);
+        return getNumber(-1, minValue, maxValue);
     }
 
     static int getNumber(int setValue) {
@@ -104,9 +119,9 @@ public class ConsoleUtils {
         return getScores(firstTeam, secondTeam, new Pair<>(-1, -1));
     }
 
-    static String pickTeam(String firstTeam, String secondTeam){
-        System.out.println("Wybierz drużynę: \n1."+firstTeam+"\n2."+secondTeam);
-        int choice = getNumber(1,2);
+    static String pickTeam(String firstTeam, String secondTeam) {
+        System.out.println("Wybierz drużynę: \n1." + firstTeam + "\n2." + secondTeam);
+        int choice = getNumber(1, 2);
         return choice == 1 ? firstTeam : secondTeam;
     }
 
@@ -128,7 +143,7 @@ public class ConsoleUtils {
 
     static void printMatch(Match match) {
         //75 znaków?
-        System.out.println("Id: "+match.getId());
+        System.out.println("Id: " + match.getId());
         System.out.format("%-15s na %-30s\n", match.getDate(), match.getStadium());
         System.out.format("%30s vs. %-30s\n", match.getFirstTeam(), match.getSecondTeam());
         Pair<Integer, Integer> score = new Pair<>(match.getFirstScore(), match.getSecondScore());

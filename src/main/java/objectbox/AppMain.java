@@ -2,6 +2,7 @@ package objectbox;
 
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
+import io.objectbox.query.QueryBuilder;
 import javafx.util.Pair;
 
 import java.util.List;
@@ -36,11 +37,52 @@ public class AppMain {
 
     private static void getById(Box<Match> box) {
         System.out.println("Podaj id do wyszukania:");
-        int id = ConsoleUtils.getNumber(1, -1);
+        long id = ConsoleUtils.getId();
         Match match = box.get(id);
         if (match == null) {
             System.out.println("Nie znaleziono meczu o takim id");
         } else ConsoleUtils.printMatch(match);
+    }
+
+    private static void getByQuery(Box<Match> box) {
+        System.out.println("Pozostaw domyślnie * by wyszukiwać wszystkie");
+        String date = ConsoleUtils.getFormattedDate("*");
+        System.out.println("Podaj nazwę obiektu - wpisz * by wyszukiwać wszystkie");
+        String stadium = ConsoleUtils.getText(1);
+        List<Match> results;
+        if (date.compareTo("*") == 0 && stadium.compareTo("*") == 0) {
+            results = box.getAll();
+        } else if (date.compareTo("*") != 0 && stadium.compareTo("*") == 0) {
+            results = box.query().equal(Match_.date, date).build().find();
+        } else if (date.compareTo("*") == 0) {
+            results = box.query().equal(Match_.stadium, stadium).build().find();
+        } else {
+            QueryBuilder<Match> builder = box.query();
+            builder.equal(Match_.date, date).equal(Match_.stadium, stadium);
+            results = builder.build().find();
+        }
+        for (Match m : results) {
+            ConsoleUtils.printMatch(m);
+        }
+    }
+
+    private static void deleteMatch(Box<Match> box) {
+        System.out.println("Podaj id do wyszukania:");
+        long id = ConsoleUtils.getId();
+        if (box.remove(id)){
+            System.out.println("Usunięto mecz.");
+        } else System.out.println("Usuwanie nie powiodło się.");
+    }
+
+    private static void getAll(Box<Match> box) {
+        List<Match> matches = box.getAll();
+        if (matches.isEmpty()) {
+            System.out.println("Nie ma żadnych meczy w lidze");
+            return;
+        }
+        for (Match m: matches) {
+            ConsoleUtils.printMatch(m);
+        }
     }
 
     public static void main(String[] args) {
@@ -48,23 +90,26 @@ public class AppMain {
         Box<Match> box = store.boxFor(Match.class);
         System.out.println("Aplikacja na PSR lab 6 - ObjectBOX");
         System.out.println("Piotr Walczak gr. 1ID22B");
-        while (true){
+        while (true) {
             switch (ConsoleUtils.getMenuOption()) {
                 case 'd':
                     putMatch(box);
                     break;
-                case 'w': {
-                    for (Match m : box.getAll()) {
-                        ConsoleUtils.printMatch(m);
-                    }
+                case 'u':
+                    deleteMatch(box);
                     break;
-                }
                 case 'i':
                     getById(box);
                     break;
+                case 'w':
+                    getAll(box);
+                    break;
+                case 'p':
+                    getByQuery(box);
+                    break;
                 case 'z':
                     store.close();
-                    break;
+                    return;
                 default:
                     System.out.println("Podano nieznaną operację. Spróbuj ponownie.");
             }
