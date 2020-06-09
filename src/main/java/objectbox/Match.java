@@ -1,7 +1,10 @@
+package objectbox;
+
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.converter.PropertyConverter;
+import objectbox.Goal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +17,13 @@ public class Match {
 
     @Convert(converter = GoalListConverter.class, dbType = String.class)
     private List<Goal> goals;
+    private String date;
+    private String stadium;
+    private String firstTeam;
+    private String secondTeam;
+    private int firstScore;
+    private int secondScore;
+    private int time;
 
     public static class GoalListConverter implements PropertyConverter<List<Goal>, String> {
         @Override
@@ -38,12 +48,21 @@ public class Match {
             return builder.toString();
         }
     }
-    private String date;
-    private String stadium;
-    private String firstTeam;
-    private String secondTeam;
-    private int firstScore;
-    private int secondScore;
+
+    public Match() {
+    }
+
+    public Match(Long id, List<Goal> goals, String date, String stadium, String firstTeam, String secondTeam, int firstScore, int secondScore, int time) {
+        this.id = id;
+        this.goals = goals;
+        this.date = date;
+        this.stadium = stadium;
+        this.firstTeam = firstTeam;
+        this.secondTeam = secondTeam;
+        this.firstScore = firstScore;
+        this.secondScore = secondScore;
+        this.time = time;
+    }
 
     public Long getId() {
         return id;
@@ -107,5 +126,13 @@ public class Match {
 
     public void setSecondScore(int secondScore) {
         this.secondScore = secondScore;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }

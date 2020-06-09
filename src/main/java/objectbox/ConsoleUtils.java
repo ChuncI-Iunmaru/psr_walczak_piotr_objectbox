@@ -1,3 +1,5 @@
+package objectbox;
+
 import javafx.util.Pair;
 
 import java.time.LocalDate;
@@ -8,6 +10,26 @@ import java.util.*;
 public class ConsoleUtils {
     private static Scanner scanner = new Scanner(System.in);
     private static DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    static char getMenuOption() {
+        System.out.println("\n1.[d]odaj mecz" +
+                "\n2.[u]suń mecz" +
+                "\n3.[a]ktualizuj mecz" +
+                "\n4.pobierz po [i]dentyfikatorze" +
+                "\n5.pobierz [w]szystkie" +
+                "\n6.[p]obierz po dacie i/lub obiekcie" +
+                "\n7.[o]blicz statystki dla druzyny" +
+                "\n8.[z]akoncz");
+        while (true) {
+            try {
+                System.out.print("Podaj operację: ");
+                return scanner.nextLine().toLowerCase().charAt(0);
+            } catch (StringIndexOutOfBoundsException e) {
+                scanner.nextLine();
+                System.out.println("Podano nieprawidłową operację.");
+            }
+        }
+    }
 
     static String getFormattedDate(String setValue) {
         System.out.println("Podaj date meczu w formacie DD-MM-YYYY");
@@ -104,24 +126,22 @@ public class ConsoleUtils {
         return goals;
     }
 
-//    static void printRowAsMatch(Row row) {
-//        //75 znaków?
-//        System.out.println("Id: "+row.getInt("id"));
-//        System.out.format("%-15s na %-30s\n", row.getString("date"), row.getString("stadium"));
-//        System.out.format("%30s vs. %-30s\n", row.getString("team1"), row.getString("team2"));
-//        Pair<Integer, Integer> score = new Pair<>(row.getInt("score1"), row.getInt("score2"));
-//        System.out.format("%30s: - :%-30s\n", score.getKey(), score.getValue());
-//        if (score.getKey().equals(score.getValue())) {
-//            System.out.format("%40s\n", "REMIS");
-//        } else if (score.getKey() > score.getValue()) {
-//            System.out.format("%-40s\n", "Zwycięzca: " + row.getString("team1"));
-//        } else System.out.format("%75s\n", "Zwycięzca: " + row.getString("team2"));
-//        System.out.format(String.format("%75s\n", "-").replace(' ', '-'));
-//        List<UdtValue> goals = row.getList("goals", UdtValue.class);
-//        assert goals != null;
-//        for (UdtValue g : goals) {
-//            System.out.format("%20s w: %3d minucie. Zdobył(a): %-30s\n", g.getString("team"), g.getInt("time"), g.getString("player"));
-//        }
-//        System.out.println();
-//    }
+    static void printMatch(Match match) {
+        //75 znaków?
+        System.out.println("Id: "+match.getId());
+        System.out.format("%-15s na %-30s\n", match.getDate(), match.getStadium());
+        System.out.format("%30s vs. %-30s\n", match.getFirstTeam(), match.getSecondTeam());
+        Pair<Integer, Integer> score = new Pair<>(match.getFirstScore(), match.getSecondScore());
+        System.out.format("%30s: - :%-30s\n", score.getKey(), score.getValue());
+        if (score.getKey().equals(score.getValue())) {
+            System.out.format("%35s\n", "REMIS");
+        } else if (score.getKey() > score.getValue()) {
+            System.out.format("%-40s\n", "Zwycięzca: " + match.getFirstTeam());
+        } else System.out.format("%75s\n", "Zwycięzca: " + match.getSecondTeam());
+        System.out.format(String.format("%75s\n", "-").replace(' ', '-'));
+        for (Goal g : match.getGoals()) {
+            System.out.format("%20s w: %3d minucie. Zdobył(a): %-30s\n", g.getTeam(), g.getTime(), g.getPlayer());
+        }
+        System.out.println();
+    }
 }

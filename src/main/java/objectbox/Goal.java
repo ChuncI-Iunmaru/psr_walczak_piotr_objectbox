@@ -1,3 +1,5 @@
+package objectbox;
+
 public class Goal {
     private String team;
     private String player;

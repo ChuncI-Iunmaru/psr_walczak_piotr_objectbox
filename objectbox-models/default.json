@@ -1,0 +1,85 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "2:4144468109349879168",
+      "lastPropertyId": "9:395376009300559526",
+      "name": "Match",
+      "properties": [
+        {
+          "id": "1:310677991469807042",
+          "name": "id",
+          "type": 6,
+          "flags": 3
+        },
+        {
+          "id": "2:1650328959017119269",
+          "name": "goals",
+          "type": 9
+        },
+        {
+          "id": "3:5373954490005675378",
+          "name": "date",
+          "type": 9
+        },
+        {
+          "id": "4:3498757139914728112",
+          "name": "stadium",
+          "type": 9
+        },
+        {
+          "id": "5:3002275942193098877",
+          "name": "firstTeam",
+          "type": 9
+        },
+        {
+          "id": "6:2286908590870351241",
+          "name": "secondTeam",
+          "type": 9
+        },
+        {
+          "id": "7:9024748985357363626",
+          "name": "firstScore",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "8:1939725215820447648",
+          "name": "secondScore",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "9:395376009300559526",
+          "name": "time",
+          "type": 5,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:4144468109349879168",
+  "lastIndexId": "1:3090295589691215635",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    3933128565911493157
+  ],
+  "retiredIndexUids": [
+    3090295589691215635
+  ],
+  "retiredPropertyUids": [
+    8315208128098293302,
+    597144426800870541,
+    2052548418560847884,
+    4054478031821039374,
+    6057137087001882821
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
