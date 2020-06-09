@@ -21,11 +21,13 @@ public class AppMain {
         System.out.println("Podaj nazwę drugiej drużyny:");
         String secondTeam = ConsoleUtils.getText(1);
         System.out.println("Podaj czas trwania meczu:");
-        int matchTime = ConsoleUtils.getNumber(1, -1);
+        int matchTime = ConsoleUtils.getNumber(90, -1);
         newMatch.setFirstTeam(firstTeam);
         newMatch.setSecondTeam(secondTeam);
         newMatch.setTime(matchTime);
         Pair<Integer, Integer> result = ConsoleUtils.getScores(firstTeam, secondTeam);
+        newMatch.setFirstScore(result.getKey());
+        newMatch.setSecondScore(result.getValue());
         List<Goal> goals = Stream.concat(
                 ConsoleUtils.getGoalsForTeam(result.getKey(), matchTime, firstTeam).stream(),
                 ConsoleUtils.getGoalsForTeam(result.getValue(), matchTime, secondTeam).stream()
@@ -67,9 +69,9 @@ public class AppMain {
     }
 
     private static void deleteMatch(Box<Match> box) {
-        System.out.println("Podaj id do wyszukania:");
+        System.out.println("Podaj id do usunięcia:");
         long id = ConsoleUtils.getId();
-        if (box.remove(id)){
+        if (box.remove(id)) {
             System.out.println("Usunięto mecz.");
         } else System.out.println("Usuwanie nie powiodło się.");
     }
@@ -80,9 +82,41 @@ public class AppMain {
             System.out.println("Nie ma żadnych meczy w lidze");
             return;
         }
-        for (Match m: matches) {
+        for (Match m : matches) {
             ConsoleUtils.printMatch(m);
         }
+    }
+
+    private static void update(Box<Match> box) {
+        System.out.println("Podaj id do wyszukania:");
+        long id = ConsoleUtils.getId();
+        Match match = box.get(id);
+        if (match == null) {
+            System.out.println("Nie znaleziono meczu o takim id");
+            return;
+        }
+        match.setDate(ConsoleUtils.getFormattedDate(match.getDate()));
+        System.out.println("Podaj nazwę obiektu. Obecna wartość: "+match.getStadium()+". Pozostaw puste by nie zmieniać");
+        String tmp = ConsoleUtils.getText(0);
+        match.setStadium(tmp.isEmpty() ? match.getStadium() : tmp);
+        System.out.println("Podaj nazwę pierwszej drużyny. Obecna wartość: "+match.getFirstTeam()+". Pozostaw puste by nie zmieniać");
+        tmp = ConsoleUtils.getText(0);
+        match.setFirstTeam(tmp.isEmpty() ? match.getFirstTeam() : tmp);
+        System.out.println("Podaj nazwę drugiej drużyny. Obecna wartość: "+match.getSecondTeam()+". Pozostaw puste by nie zmieniać");
+        tmp = ConsoleUtils.getText(0);
+        match.setSecondTeam(tmp.isEmpty() ? match.getSecondTeam() : tmp);
+        System.out.println("Podaj czas trwania meczu:");
+        match.setTime(ConsoleUtils.getNumber(match.getTime(), 90, -1));
+        System.out.println("Po wprowadzeniu zmian podaj nowy wynik i gole:");
+        Pair<Integer, Integer> result = ConsoleUtils.getScores(match.getFirstTeam(), match.getSecondTeam());
+        match.setFirstScore(result.getKey());
+        match.setSecondScore(result.getValue());
+        List<Goal> goals = Stream.concat(
+                ConsoleUtils.getGoalsForTeam(result.getKey(), match.getTime(), match.getFirstTeam()).stream(),
+                ConsoleUtils.getGoalsForTeam(result.getValue(), match.getTime(), match.getSecondTeam()).stream()
+        ).collect(Collectors.toList());
+        match.setGoals(goals);
+        box.put(match);
     }
 
     public static void main(String[] args) {
@@ -97,6 +131,9 @@ public class AppMain {
                     break;
                 case 'u':
                     deleteMatch(box);
+                    break;
+                case 'a':
+                    update(box);
                     break;
                 case 'i':
                     getById(box);

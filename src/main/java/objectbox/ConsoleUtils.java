@@ -136,7 +136,10 @@ public class ConsoleUtils {
             tmpTime = ConsoleUtils.getNumber(1, matchTime);
             System.out.println("Podaj nazwisko zawodnika który zdobył gola: ");
             tmpPlayer = ConsoleUtils.getText(1);
-            goals.add(new Goal(team, tmpPlayer, tmpTime));
+            // Znaki , i ; są niedozwolne w golach z powodu działania GoalListConverter
+            goals.add(new Goal(team.replace(",", "").replace(";", ""),
+                    tmpPlayer.replace(",", "").replace(";", ""),
+                    tmpTime));
         }
         return goals;
     }
