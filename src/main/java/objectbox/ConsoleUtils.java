@@ -98,13 +98,6 @@ public class ConsoleUtils {
         return getNumber(-1, minValue, maxValue);
     }
 
-    static int getNumber(int setValue) {
-        return getNumber(setValue, 1, -1);
-    }
-
-    static int getNumber() {
-        return getNumber(-1, 1, -1);
-    }
 
     static Pair<Integer, Integer> getScores(String firstTeam, String secondTeam, Pair<Integer, Integer> setValue) {
         int firstScore, secondScore;
@@ -117,12 +110,6 @@ public class ConsoleUtils {
 
     static Pair<Integer, Integer> getScores(String firstTeam, String secondTeam) {
         return getScores(firstTeam, secondTeam, new Pair<>(-1, -1));
-    }
-
-    static String pickTeam(String firstTeam, String secondTeam) {
-        System.out.println("Wybierz drużynę: \n1." + firstTeam + "\n2." + secondTeam);
-        int choice = getNumber(1, 2);
-        return choice == 1 ? firstTeam : secondTeam;
     }
 
     static List<Goal> getGoalsForTeam(int number, int matchTime, String team) {
